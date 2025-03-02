@@ -6,11 +6,14 @@
   <interact-screen
     v-if="statusMatch === 'match'"
     :cardsContext="settings.cardsContext"
+    :countdownTime="countdownTime"
     @onFinish="onGetResult"
+    @onTimeout="onTimeout"
   />
   <result-screen
     v-if="statusMatch === 'result'"
     :timer="timer"
+    :isTimeout="isTimeout"
     @onStartAgain="statusMatch = 'default'"
   />
 </template>
@@ -38,6 +41,8 @@ export default {
       },
       timer: 0,
       statusMatch: "default",
+      countdownTime: 60, // Thời gian đếm ngược (giây)
+      isTimeout: false, // Biến để kiểm tra xem đã hết thời gian chưa
     };
   },
   methods: {
@@ -53,6 +58,12 @@ export default {
 
       this.settings.cardsContext = shuffled(shuffled(shuffled(cards)));
       this.settings.startedAt = new Date().getTime();
+      this.isTimeout = false; // Reset trạng thái timeout
+
+      // Cập nhật thời gian đếm ngược từ cấu hình
+      if (configs.countdownTime) {
+        this.countdownTime = configs.countdownTime;
+      }
 
       this.statusMatch = "match";
     },
@@ -60,6 +71,11 @@ export default {
     onGetResult() {
       this.statusMatch = "result";
       this.timer = new Date().getTime() - this.settings.startedAt;
+    },
+
+    onTimeout() {
+      this.statusMatch = "result";
+      this.isTimeout = true;
     },
   },
 };

@@ -20,15 +20,41 @@
         <span>Super Hard</span>
       </button>
     </div>
+
+    <div class="countdown-settings">
+      <p>Chọn thời gian đếm ngược:</p>
+      <div class="time-options">
+        <button
+          v-for="time in timeOptions"
+          :key="time"
+          :class="{ active: selectedTime === time }"
+          @click="selectTime(time)"
+        >
+          {{ time }} giây
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   emits: ["onStart"],
+  data() {
+    return {
+      timeOptions: [30, 60, 90, 120],
+      selectedTime: 60,
+    };
+  },
   methods: {
     onStart(totalOfBlocks) {
-      this.$emit("onStart", { totalOfBlocks });
+      this.$emit("onStart", {
+        totalOfBlocks,
+        countdownTime: this.selectedTime,
+      });
+    },
+    selectTime(time) {
+      this.selectedTime = time;
     },
   },
 };
@@ -95,5 +121,44 @@ export default {
   display: block;
   font-size: 1.25rem;
   margin-top: 0.5rem;
+}
+
+.countdown-settings {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.countdown-settings p {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.time-options {
+  display: flex;
+  justify-content: center;
+}
+
+.time-options button {
+  font: var(--font);
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid var(--light);
+  color: var(--light);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.time-options button:hover {
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+.time-options button.active {
+  background-color: var(--light);
+  color: var(--dark);
+  font-weight: bold;
 }
 </style>

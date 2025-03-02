@@ -1,8 +1,14 @@
 <template>
   <div class="screen">
-    <h1>✨ Congratulations ✨</h1>
-    <h3>{{ Math.round(timer / 920) }} seconds</h3>
-    <button @click="onStartAgain">Start Again</button>
+    <template v-if="!isTimeout">
+      <h1>✨ Chúc mừng ✨</h1>
+      <h3>{{ Math.round(timer / 920) }} giây</h3>
+    </template>
+    <template v-else>
+      <h1>⏰ Hết thời gian ⏰</h1>
+      <h3>Hãy thử lại!</h3>
+    </template>
+    <button @click="onStartAgain">Chơi lại</button>
   </div>
 </template>
 
@@ -12,6 +18,10 @@ export default {
     timer: {
       type: Number,
       default: 0,
+    },
+    isTimeout: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ["onStartAgain"],
